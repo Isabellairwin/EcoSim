@@ -1,0 +1,416 @@
+/* ==========================================================================
+   EcoSim — Miniature Smart City Simulator
+   Stylesheet: Modern Eco-Engineering Theme
+   ========================================================================== */
+
+:root {
+  --primary-emerald: #10b981;
+  --primary-dark: #064e3b;
+  --primary-forest: #065f46;
+  --primary-light: #ecfdf5;
+  --accent-mint: #34d399;
+  --accent-lime: #a3e635;
+  --solar-amber: #f59e0b;
+  --sky-blue: #0284c7;
+  --danger-coral: #ef4444;
+  --dark-slate: #0f172a;
+  --gray-subtle: #f8fafc;
+  --border-color: rgba(226, 232, 240, 0.8);
+  --glass-bg: rgba(6, 78, 59, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+  --card-shadow-hover: 0 20px 30px -10px rgba(16, 185, 129, 0.15), 0 10px 15px -5px rgba(0, 0, 0, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #1e293b;
+  background-color: #f1f5f9;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, .brand-title {
+  font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* ================= TOP STATUS BAR ================= */
+.top-status-bar {
+  background: #022c22;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot-success {
+  background-color: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.status-dot-warning {
+  background-color: #f59e0b;
+  box-shadow: 0 0 8px #f59e0b;
+  animation: pulse-amber 2s infinite;
+}
+
+.status-dot-danger {
+  background-color: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+}
+
+@keyframes pulse-amber {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.btn-xs {
+  font-size: 0.72rem;
+  padding: 0.15rem 0.5rem;
+}
+
+/* ================= NAVBAR ================= */
+.glass-navbar {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  transition: all 0.3s ease;
+  z-index: 1030;
+}
+
+.brand-icon-wrapper {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #10b981, #047857);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+}
+
+.brand-icon {
+  font-size: 1.2rem;
+}
+
+.brand-leaf {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  font-size: 0.8rem;
+  color: #a3e635;
+}
+
+.brand-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #ffffff;
+}
+
+.text-accent {
+  color: var(--accent-mint);
+}
+
+.text-accent-light {
+  color: #a7f3d0;
+}
+
+.brand-subtitle {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  font-size: 0.92rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link.active {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-accent {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  border: none;
+  transition: all 0.25s ease;
+}
+
+.btn-accent:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px rgba(16, 185, 129, 0.35);
+}
+
+/* ================= HERO SECTION ================= */
+.hero-section {
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #022c22 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-title {
+  line-height: 1.15;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #34d399, #a3e635);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-desc {
+  max-width: 620px;
+  font-weight: 300;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.stat-mini-card {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-number {
+  display: block;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.btn-ghost-light {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-ghost-light:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* ================= CARDS & METRICS ================= */
+.metric-card {
+  background: #ffffff;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid var(--border-color);
+}
+
+.metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--card-shadow-hover) !important;
+}
+
+.metric-icon-box {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+
+.x-small {
+  font-size: 0.75rem;
+}
+
+/* ================= FORM CONTROLS & SLIDERS ================= */
+.slider-group {
+  position: relative;
+}
+
+.form-range {
+  height: 1.5rem;
+}
+
+.form-range::-webkit-slider-thumb {
+  background-color: var(--primary-emerald);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+  transition: all 0.15s ease;
+}
+
+.form-range::-webkit-slider-thumb:active {
+  background-color: var(--primary-dark);
+  box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.3);
+}
+
+.form-range::-moz-range-thumb {
+  background-color: var(--primary-emerald);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+}
+
+/* ================= CITY CANVAS & VISUALIZER ================= */
+.visualizer-wrapper {
+  background: #0f172a;
+  position: relative;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+#cityMainCanvas {
+  display: block;
+}
+
+.canvas-hud-top-left {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  pointer-events: none;
+}
+
+.canvas-hud-top-right {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  pointer-events: none;
+}
+
+.canvas-hud-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 6px 14px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(6px);
+  font-size: 0.72rem;
+  color: #94a3b8;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-badge {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 0.85rem;
+}
+
+.canvas-overlay-banner {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 3px 10px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+}
+
+/* ================= SAVED CITIES CARDS ================= */
+.city-item-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  transition: all 0.25s ease;
+}
+
+.city-item-card:hover {
+  transform: translateY(-3px);
+  border-color: #10b981;
+  box-shadow: var(--card-shadow-hover);
+}
+
+.city-stat-pill {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 0.78rem;
+}
+
+/* ================= COMPARISON TABLE ================= */
+.comparison-card {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.diff-positive {
+  color: #10b981;
+  font-weight: 700;
+}
+
+.diff-negative {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+/* ================= SCROLLBAR ================= */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ================= RESPONSIVE ADJUSTMENTS ================= */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.2rem;
+  }
+  .visualizer-wrapper {
+    min-height: 320px;
+  }
+}
+

@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoSim — Miniature Smart City Simulator</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20%22100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-bs-spy="scroll" data-bs-target="#mainNavbar" data-bs-offset="100" tabindex="0">
+
+  <!-- ================= TOP STATUS BAR ================= -->
+  <div class="top-status-bar text-white py-1 px-3">
+    <div class="container-fluid d-flex flex-wrap justify-content-between align-items-center small">
+      <div class="d-flex align-items-center gap-2">
+        <span class="badge bg-light text-dark fw-bold"><i class="fa-solid fa-graduation-cap me-1"></i> College Web Tech Project</span>
+        <span class="d-none d-md-inline text-white-50">|</span>
+        <span class="d-none d-md-inline"><i class="fa-solid fa-leaf text-success-light me-1"></i> Miniature Smart City Simulator</span>
+      </div>
+      <div class="d-flex align-items-center gap-3">
+        <!-- Live MongoDB Atlas Status Pill -->
+        <div id="dbStatusPill" class="d-flex align-items-center gap-2 px-2 py-1 rounded bg-black bg-opacity-25 border border-light border-opacity-10">
+          <span class="status-dot status-dot-warning" id="dbStatusDot"></span>
+          <span id="dbStatusText" class="fw-semibold">Checking MongoDB...</span>
+          <button id="btnCheckDb" class="btn btn-xs btn-outline-light py-0 px-2 rounded-pill ms-1" title="Test/Refresh Database Connection">
+            <i class="fa-solid fa-rotate me-1" id="dbRefreshIcon"></i> Test
+          </button>
+        </div>
+        <button class="btn btn-xs btn-light py-0 px-2 rounded-pill fw-semibold" data-bs-toggle="modal" data-bs-target="#dbConfigModal">
+          <i class="fa-solid fa-key me-1 text-warning"></i> Atlas Setup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= NAVIGATION ================= -->
+  <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark sticky-top glass-navbar">
+    <div class="container-fluid px-lg-4">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#home">
+        <div class="brand-icon-wrapper">
+          <i class="fa-solid fa-city brand-icon"></i>
+          <i class="fa-solid fa-seedling brand-leaf"></i>
+        </div>
+        <div>
+          <span class="brand-title">Eco<span class="text-accent">Sim</span></span>
+          <span class="brand-subtitle d-block">Smart City Simulator</span>
+        </div>
+      </a>
+
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link active" href="#home"><i class="fa-solid fa-house-chimney me-1"></i> Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#dashboard"><i class="fa-solid fa-chart-pie me-1"></i> Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#builder"><i class="fa-solid fa-cubes me-1"></i> City Builder</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#analytics"><i class="fa-solid fa-chart-line me-1"></i> Analytics</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#savedCities"><i class="fa-solid fa-database me-1"></i> Saved Cities (<span id="savedCityCount">0</span>)</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#compare"><i class="fa-solid fa-code-compare me-1"></i> Compare</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#methodology"><i class="fa-solid fa-book-open me-1"></i> Methodology</a>
+          </li>
+          <li class="nav-item ms-lg-2">
+            <a class="btn btn-accent rounded-pill px-3 py-1 btn-sm fw-bold shadow-sm" href="#builder">
+              <i class="fa-solid fa-play me-1"></i> Launch Simulator
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================= HERO SECTION (HOME) ================= -->
+  <section id="home" class="hero-section text-white py-5">
+    <div class="container-fluid px-lg-5 py-4">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+          <div class="badge bg-success bg-opacity-25 border border-success text-accent-light px-3 py-2 rounded-pill mb-3 fw-bold">
+            <i class="fa-solid fa-bolt-lightning me-1 text-warning"></i> Sustainable Urban Engineering & Analytics
+          </div>
+          <h1 class="display-4 fw-extrabold hero-title mb-3">
+            Design Tomorrow's <span class="gradient-text">Zero-Emission</span> Smart City Today
+          </h1>
+          <p class="lead text-light text-opacity-85 hero-desc mb-4">
+            EcoSim is a full-stack smart city simulation platform. Model traffic congestion, solar harvest, air quality index, and green canopy ratios in real-time, backed by persistent MongoDB Atlas storage and deterministic urban engineering formulas.
+          </p>
+
+          <div class="d-flex flex-wrap gap-3 mb-4">
+            <a href="#builder" class="btn btn-accent btn-lg rounded-pill px-4 fw-bold shadow">
+              <i class="fa-solid fa-sliders me-2"></i> Open Interactive Builder
+            </a>
+            <a href="#savedCities" class="btn btn-outline-light btn-lg rounded-pill px-4 fw-bold">
+              <i class="fa-solid fa-server me-2"></i> Explore Saved Cities
+            </a>
+            <a href="#methodology" class="btn btn-ghost-light btn-lg rounded-pill px-3 fw-semibold">
+              <i class="fa-solid fa-microscope me-1"></i> Formulas & Architecture
+            </a>
+          </div>
+
+          <!-- Quick Stats Highlights -->
+          <div class="row g-3 pt-3 border-top border-light border-opacity-10">
+            <div class="col-6 col-sm-3">
+              <div class="stat-mini-card">
+                <span class="stat-number">4</span>
+                <span class="stat-label">Core Urban Factors</span>
+              </div>
+            </div>
+            <div class="col-6 col-sm-3">
+              <div class="stat-mini-card">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Deterministic Models</span>
+              </div>
+            </div>
+            <div class="col-6 col-sm-3">
+              <div class="stat-mini-card">
+                <span class="stat-number">Atlas</span>
+                <span class="stat-label">Persistent Storage</span>
+              </div>
+            </div>
+            <div class="col-6 col-sm-3">
+              <div class="stat-mini-card">
+                <span class="stat-number">60 FPS</span>
+                <span class="stat-label">Realtime Visualizer</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-5">
+          <!-- Live Preview Visual Card -->
+          <div class="hero-preview-card p-3 rounded-4 shadow-lg border border-light border-opacity-10 glass-panel">
+            <div class="d-flex justify-content-between align-items-center mb-2 px-2">
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-success rounded-pill px-2 py-1"><i class="fa-solid fa-circle-dot me-1"></i> Live Miniature City</span>
+              </div>
+              <span id="heroSustainabilityBadge" class="badge bg-accent text-dark fw-bold px-3 py-1 rounded-pill">
+                Eco Score: 88 (Grade A)
+              </span>
+            </div>
+            
+            <!-- Miniature canvas preview container -->
+            <div class="canvas-container rounded-3 overflow-hidden position-relative shadow-sm" style="height: 280px;">
+              <canvas id="heroCityCanvas" width="500" height="280"></canvas>
+              <div class="canvas-overlay-banner">
+                <span class="small fw-semibold"><i class="fa-solid fa-eye me-1"></i> Dynamic Visualizer Response</span>
+              </div>
+            </div>
+
+            <div class="mt-3 row g-2 text-center small text-light">
+              <div class="col-3">
+                <div class="p-2 rounded bg-black bg-opacity-25">
+                  <div class="text-white-50">Traffic</div>
+                  <div class="fw-bold text-success" id="heroTrafficVal">18%</div>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="p-2 rounded bg-black bg-opacity-25">
+                  <div class="text-white-50">Solar</div>
+                  <div class="fw-bold text-warning" id="heroSolarVal">820 kWh</div>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="p-2 rounded bg-black bg-opacity-25">
+                  <div class="text-white-50">Air Quality</div>
+                  <div class="fw-bold text-info" id="heroAqiVal">Clean</div>
+                </div>
+              </div>
+              <div class="col-3">
+                <div class="p-2 rounded bg-black bg-opacity-25">
+                  <div class="text-white-50">Greenery</div>
+                  <div class="fw-bold text-accent" id="heroGreeneryVal">64%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MAIN CONTAINER ================= -->
+  <main class="container-fluid px-lg-5 py-4">
+
+    <!-- ================= DATABASE ALERT BANNER (IF NOT CONNECTED) ================= -->
+    <div id="dbAlertBanner" class="alert alert-warning border-warning shadow-sm d-flex flex-wrap align-items-center justify-content-between p-3 rounded-4 mb-4" role="alert">
+      <div class="d-flex align-items-center gap-3">
+        <div class="fs-2 text-warning"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div>
+          <h6 class="alert-heading fw-bold mb-1">MongoDB Atlas Pending Connection</h6>
+          <p class="mb-0 small text-dark">
+            EcoSim is running in offline preview mode. To persist and manage cities, paste your MongoDB Atlas connection string after <code>MONGODB_URI=</code> in the local <strong><code>EcoSim/.env</code></strong> file.
+          </p>
+        </div>
+      </div>
+      <div class="d-flex gap-2 mt-2 mt-md-0">
+        <button class="btn btn-warning btn-sm fw-bold px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#dbConfigModal">
+          <i class="fa-solid fa-sliders me-1"></i> Setup Instructions
+        </button>
+        <button id="btnRetryDbBanner" class="btn btn-outline-dark btn-sm fw-bold px-3 rounded-pill">
+          <i class="fa-solid fa-rotate me-1"></i> Re-test Connection
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= SECTION 2: SMART CITY DASHBOARD ================= -->
+    <section id="dashboard" class="mb-5">
+      <div class="section-header d-flex justify-content-between align-items-end mb-4">
+        <div>
+          <span class="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-1 rounded-pill mb-2">Real-Time Control Center</span>
+          <h2 class="fw-bold mb-1">Smart City Dashboard</h2>
+          <p class="text-muted mb-0">High-level environmental telemetry, energy generation metrics, and urban indicators.</p>
+        </div>
+        <div class="d-none d-md-flex align-items-center gap-2">
+          <button class="btn btn-outline-secondary btn-sm rounded-pill" id="btnResetToDefaults">
+            <i class="fa-solid fa-arrow-rotate-left me-1"></i> Reset Baseline
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI Indicator Cards -->
+      <div class="row g-3 mb-4">
+        <!-- Sustainability Score Card -->
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card h-100 metric-card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4 d-flex flex-column justify-content-between">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <span class="text-muted small fw-semibold text-uppercase tracking-wider">Sustainability Score</span>
+                  <h3 class="display-6 fw-bold mb-0 mt-1" id="kpiSustainabilityScore">82<span class="fs-6 text-muted">/100</span></h3>
+                </div>
+                <div class="metric-icon-box bg-success bg-opacity-10 text-success rounded-3">
+                  <i class="fa-solid fa-seedling fs-4"></i>
+                </div>
+              </div>
+              <div>
+                <div class="progress mb-2" style="height: 8px;">
+                  <div class="progress-bar bg-success" id="kpiSustainabilityBar" role="progressbar" style="width: 82%"></div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center small">
+                  <span class="badge bg-success" id="kpiSustainabilityGrade">Grade A</span>
+                  <span class="text-muted" id="kpiSustainabilityTitle">Exemplary Sustainable</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clean Energy Card -->
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card h-100 metric-card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4 d-flex flex-column justify-content-between">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <span class="text-muted small fw-semibold text-uppercase tracking-wider">Solar Generation</span>
+                  <h3 class="display-6 fw-bold mb-0 mt-1" id="kpiSolarOutput">525 <span class="fs-6 text-muted">kWh/d</span></h3>
+                </div>
+                <div class="metric-icon-box bg-warning bg-opacity-10 text-warning rounded-3">
+                  <i class="fa-solid fa-solar-panel fs-4"></i>
+                </div>
+              </div>
+              <div>
+                <div class="progress mb-2" style="height: 8px;">
+                  <div class="progress-bar bg-warning" id="kpiSolarBar" role="progressbar" style="width: 75%"></div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center small">
+                  <span class="text-muted"><span id="kpiSolarCoverage">75%</span> Demand Covered</span>
+                  <span class="badge bg-warning bg-opacity-25 text-dark" id="kpiCo2Saved">220 kg CO₂/d</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pollution Index Card -->
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card h-100 metric-card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4 d-flex flex-column justify-content-between">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <span class="text-muted small fw-semibold text-uppercase tracking-wider">Pollution Index</span>
+                  <h3 class="display-6 fw-bold mb-0 mt-1" id="kpiPollutionIndex">22<span class="fs-6 text-muted">/100</span></h3>
+                </div>
+                <div class="metric-icon-box bg-info bg-opacity-10 text-info rounded-3">
+                  <i class="fa-solid fa-smog fs-4"></i>
+                </div>
+              </div>
+              <div>
+                <div class="progress mb-2" style="height: 8px;">
+                  <div class="progress-bar bg-info" id="kpiPollutionBar" role="progressbar" style="width: 22%"></div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center small">
+                  <span class="badge bg-info bg-opacity-25 text-dark" id="kpiAirQuality">Clean Air</span>
+                  <span class="text-muted" id="kpiPollutionCategory">Good Condition</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Traffic Congestion Card -->
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="card h-100 metric-card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4 d-flex flex-column justify-content-between">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <span class="text-muted small fw-semibold text-uppercase tracking-wider">Traffic Congestion</span>
+                  <h3 class="display-6 fw-bold mb-0 mt-1" id="kpiTrafficCongestion">24<span class="fs-6 text-muted">%</span></h3>
+                </div>
+                <div class="metric-icon-box bg-danger bg-opacity-10 text-danger rounded-3">
+                  <i class="fa-solid fa-car-side fs-4"></i>
+                </div>
+              </div>
+              <div>
+                <div class="progress mb-2" style="height: 8px;">
+                  <div class="progress-bar bg-danger" id="kpiTrafficBar" role="progressbar" style="width: 24%"></div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center small">
+                  <span class="badge bg-success bg-opacity-25 text-success" id="kpiTrafficLevel">Smooth Flow</span>
+                  <span class="text-muted" id="kpiTransitShare">Transit: 30%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SECTION 3: INTERACTIVE CITY BUILDER & VISUALIZER ================= -->
+    <section id="builder" class="mb-5">
+      <div class="section-header d-flex flex-wrap justify-content-between align-items-end mb-4">
+        <div>
+          <span class="badge bg-primary bg-opacity-10 text-primary fw-bold px-3 py-1 rounded-pill mb-2">Interactive Sandbox</span>
+          <h2 class="fw-bold mb-1">Interactive Smart City Builder</h2>
+          <p class="text-muted mb-0">Adjust urban parameters and observe how our deterministic simulation formulas recalculate urban health in real time.</p>
+        </div>
+        <!-- Preset Templates -->
+        <div class="btn-group mt-3 mt-md-0" role="group" aria-label="City Presets">
+          <button type="button" class="btn btn-outline-success btn-sm fw-semibold preset-btn" data-preset="eco-utopia">
+            <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Eco-Utopia
+          </button>
+          <button type="button" class="btn btn-outline-primary btn-sm fw-semibold preset-btn" data-preset="solar-city">
+            <i class="fa-solid fa-sun me-1"></i> Solar Garden
+          </button>
+          <button type="button" class="btn btn-outline-secondary btn-sm fw-semibold preset-btn" data-preset="balanced-hub">
+            <i class="fa-solid fa-scale-balanced me-1"></i> Balanced Hub
+          </button>
+          <button type="button" class="btn btn-outline-danger btn-sm fw-semibold preset-btn" data-preset="industrial">
+            <i class="fa-solid fa-industry me-1"></i> High Congestion
+          </button>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <!-- Configuration Form Panel (Left) -->
+        <div class="col-lg-5">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-header bg-white border-0 pt-4 px-4 pb-2 d-flex justify-content-between align-items-center">
+              <h5 class="fw-bold mb-0"><i class="fa-solid fa-sliders text-success me-2"></i>City Parameters</h5>
+              <span class="badge bg-light text-secondary border" id="editModeBadge">New Configuration</span>
+            </div>
+            <div class="card-body p-4">
+              <form id="cityBuilderForm" novalidate>
+                <input type="hidden" id="editCityId" value="">
+
+                <!-- City Name -->
+                <div class="mb-3">
+                  <label for="inputCityName" class="form-label fw-semibold small text-muted">
+                    City Name <span class="text-danger">*</span>
+                  </label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-city text-muted"></i></span>
+                    <input type="text" class="form-control border-start-0" id="inputCityName" placeholder="e.g. Neo-Verdant City" value="Neo-Verdant Smart City" required minlength="2" maxlength="60">
+                  </div>
+                  <div class="invalid-feedback">Please enter a valid city name (2-60 characters).</div>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-3">
+                  <label for="inputCityDescription" class="form-label fw-semibold small text-muted">Description / Vision</label>
+                  <textarea class="form-control" id="inputCityDescription" rows="2" maxlength="300" placeholder="Describe the urban zoning, transportation policy, or energy goals...">A forward-thinking smart district maximizing rooftop photovoltaic generation, protected greenways, and integrated zero-emission mobility.</textarea>
+                </div>
+
+                <hr class="my-4 text-muted opacity-25">
+
+                <!-- Vehicles Slider -->
+                <div class="mb-4 slider-group">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label for="sliderVehicles" class="form-label fw-semibold small mb-0">
+                      <i class="fa-solid fa-car text-danger me-1"></i> Vehicles (Cars & Delivery)
+                    </label>
+                    <div class="badge bg-danger bg-opacity-10 text-danger fw-bold fs-6" id="valVehicles">250</div>
+                  </div>
+                  <input type="range" class="form-range" id="sliderVehicles" min="0" max="2500" step="10" value="250">
+                  <div class="d-flex justify-content-between text-muted x-small">
+                    <span>0 (Pedestrian only)</span>
+                    <span>1,250</span>
+                    <span>2,500 (Heavy)</span>
+                  </div>
+                </div>
+
+                <!-- Buildings Slider -->
+                <div class="mb-4 slider-group">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label for="sliderBuildings" class="form-label fw-semibold small mb-0">
+                      <i class="fa-solid fa-building text-primary me-1"></i> Buildings (Res & Commercial)
+                    </label>
+                    <div class="badge bg-primary bg-opacity-10 text-primary fw-bold fs-6" id="valBuildings">120</div>
+                  </div>
+                  <input type="range" class="form-range" id="sliderBuildings" min="0" max="1000" step="5" value="120">
+                  <div class="d-flex justify-content-between text-muted x-small">
+                    <span>0</span>
+                    <span>500</span>
+                    <span>1,000 (Dense)</span>
+                  </div>
+                </div>
+
+                <!-- Trees Slider -->
+                <div class="mb-4 slider-group">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label for="sliderTrees" class="form-label fw-semibold small mb-0">
+                      <i class="fa-solid fa-tree text-success me-1"></i> Trees & Urban Forest
+                    </label>
+                    <div class="badge bg-success bg-opacity-10 text-success fw-bold fs-6" id="valTrees">650</div>
+                  </div>
+                  <input type="range" class="form-range" id="sliderTrees" min="0" max="5000" step="25" value="650">
+                  <div class="d-flex justify-content-between text-muted x-small">
+                    <span>0 (Concrete)</span>
+                    <span>2,500</span>
+                    <span>5,000 (Lush Canopy)</span>
+                  </div>
+                </div>
+
+                <!-- Solar Panels Slider -->
+                <div class="mb-4 slider-group">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <label for="sliderSolar" class="form-label fw-semibold small mb-0">
+                      <i class="fa-solid fa-solar-panel text-warning me-1"></i> Solar Panels (Rooftop & Farm)
+                    </label>
+                    <div class="badge bg-warning bg-opacity-10 text-dark fw-bold fs-6" id="valSolar">400</div>
+                  </div>
+                  <input type="range" class="form-range" id="sliderSolar" min="0" max="3000" step="20" value="400">
+                  <div class="d-flex justify-content-between text-muted x-small">
+                    <span>0 (Fossil dependent)</span>
+                    <span>1,500</span>
+                    <span>3,000 (Solar Hub)</span>
+                  </div>
+                </div>
+
+                <!-- Additional Smart City Controls (Accordion) -->
+                <div class="accordion accordion-flush mb-4" id="advancedControlsAccordion">
+                  <div class="accordion-item border rounded-3 overflow-hidden">
+                    <h2 class="accordion-header" id="flush-headingOne">
+                      <button class="accordion-button collapsed py-2 px-3 bg-light small fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne">
+                        <i class="fa-solid fa-gear me-2 text-muted"></i> Advanced Infrastructure Settings
+                      </button>
+                    </h2>
+                    <div id="flush-collapseOne" class="accordion-collapse collapse p-3">
+                      <!-- Green Space Sq Km -->
+                      <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                          <label for="sliderGreenSpace" class="form-label small fw-semibold mb-0">Parkland Reserves (sq km)</label>
+                          <span class="badge bg-light text-dark border" id="valGreenSpace">4.5 km²</span>
+                        </div>
+                        <input type="range" class="form-range" id="sliderGreenSpace" min="0" max="25" step="0.5" value="4.5">
+                      </div>
+                      <!-- Public Transit Adoption -->
+                      <div class="mb-2">
+                        <div class="d-flex justify-content-between mb-1">
+                          <label for="sliderTransit" class="form-label small fw-semibold mb-0">Public Transit Adoption (%)</label>
+                          <span class="badge bg-light text-dark border" id="valTransit">35%</span>
+                        </div>
+                        <input type="range" class="form-range" id="sliderTransit" min="0" max="100" step="5" value="35">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-success btn-lg rounded-pill fw-bold shadow-sm" id="btnSaveCity">
+                    <i class="fa-solid fa-cloud-arrow-up me-2"></i> Save City to MongoDB Atlas
+                  </button>
+                  <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary w-50 rounded-pill fw-semibold btn-sm" id="btnCancelEdit" style="display:none;">
+                      <i class="fa-solid fa-xmark me-1"></i> Cancel Edit
+                    </button>
+                    <button type="button" class="btn btn-outline-primary flex-grow-1 rounded-pill fw-semibold btn-sm" id="btnRecalculateLive">
+                      <i class="fa-solid fa-calculator me-1"></i> Recalculate Telemetry
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual City Simulation Representation (Right) -->
+        <div class="col-lg-7">
+          <div class="card border-0 shadow-sm rounded-4 h-100 d-flex flex-column">
+            <div class="card-header bg-white border-0 pt-4 px-4 pb-2 d-flex flex-wrap justify-content-between align-items-center">
+              <div>
+                <h5 class="fw-bold mb-0"><i class="fa-solid fa-gamepad text-success me-2"></i>Dynamic City Canvas</h5>
+                <span class="text-muted small">Visual layout responds to configuration sliders in real-time</span>
+              </div>
+              <!-- Visual View Controls -->
+              <div class="d-flex align-items-center gap-2 mt-2 mt-sm-0">
+                <div class="form-check form-switch small mb-0">
+                  <input class="form-check-input" type="checkbox" id="toggleDayNight" checked>
+                  <label class="form-check-label" for="toggleDayNight"><i class="fa-solid fa-sun text-warning"></i> Daylight</label>
+                </div>
+                <div class="form-check form-switch small mb-0 ms-2">
+                  <input class="form-check-input" type="checkbox" id="toggleTrafficAnimation" checked>
+                  <label class="form-check-label" for="toggleTrafficAnimation"><i class="fa-solid fa-play text-success"></i> Animation</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body p-3 d-flex flex-column flex-grow-1">
+              <!-- Canvas Display Container -->
+              <div class="visualizer-wrapper rounded-4 overflow-hidden position-relative flex-grow-1" style="min-height: 420px;">
+                <canvas id="cityMainCanvas" class="w-100 h-100"></canvas>
+                
+                <!-- On-Canvas HUD Badges -->
+                <div class="canvas-hud-top-left">
+                  <span class="badge glass-badge text-dark fw-bold mb-1 d-block" id="hudCityName">Neo-Verdant Smart City</span>
+                  <span class="badge bg-success bg-opacity-75 text-white" id="hudEcoGrade">Sustainability: Grade A (82/100)</span>
+                </div>
+
+                <div class="canvas-hud-top-right">
+                  <span class="badge bg-dark bg-opacity-75 text-white" id="hudVehiclesCount"><i class="fa-solid fa-car text-danger me-1"></i> 250 Cars</span>
+                  <span class="badge bg-dark bg-opacity-75 text-white ms-1" id="hudTreesCount"><i class="fa-solid fa-tree text-success me-1"></i> 650 Trees</span>
+                </div>
+
+                <!-- Simulation Real-Time Disclaimer Bar -->
+                <div class="canvas-hud-bottom">
+                  <i class="fa-solid fa-circle-info me-1 text-info"></i> Deterministic Simulation Engine: Estimates reflect mathematical city models, not empirical physical sensors.
+                </div>
+              </div>
+
+              <!-- Visual Legend -->
+              <div class="d-flex flex-wrap justify-content-center gap-3 mt-3 py-2 px-3 bg-light rounded-3 small text-muted">
+                <span><i class="fa-solid fa-circle text-primary me-1"></i> Eco-Buildings</span>
+                <span><i class="fa-solid fa-circle text-success me-1"></i> Trees & Canopy</span>
+                <span><i class="fa-solid fa-circle text-warning me-1"></i> Rooftop Solar Arrays</span>
+                <span><i class="fa-solid fa-circle text-danger me-1"></i> Moving Traffic</span>
+                <span><i class="fa-solid fa-cloud text-secondary me-1"></i> Sky Smog Indicator</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SECTION 4: SIMULATION ANALYTICS & CHARTS ================= -->
+    <section id="analytics" class="mb-5">
+      <div class="section-header mb-4">
+        <span class="badge bg-info bg-opacity-10 text-info fw-bold px-3 py-1 rounded-pill mb-2">In-Depth Telemetry</span>
+        <h2 class="fw-bold mb-1">Simulation Analytics & Performance Graphs</h2>
+        <p class="text-muted mb-0">Multi-dimensional comparative analysis generated with Chart.js based on our urban modeling framework.</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Radar Chart: Multi-Criteria Sustainability Index -->
+        <div class="col-lg-6">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-header bg-white border-0 pt-4 px-4 pb-2">
+              <h5 class="fw-bold mb-0"><i class="fa-solid fa-chart-pie text-success me-2"></i>Multi-Axis Sustainability Radar</h5>
+              <span class="text-muted small">Balanced evaluation across 5 critical smart city dimensions</span>
+            </div>
+            <div class="card-body p-4 d-flex justify-content-center align-items-center">
+              <div style="position: relative; height: 320px; width: 100%;">
+                <canvas id="sustainabilityRadarChart"></canvas>
+              </div>
+            </div>
+            <div class="card-footer bg-light border-0 py-3 px-4 rounded-bottom-4 small text-muted">
+              <strong>Scale:</strong> 0 to 100 on each axis. Higher perimeter coverage indicates superior urban equilibrium.
+            </div>
+          </div>
+        </div>
+
+        <!-- Stacked Bar Chart: Energy Generation vs Demand -->
+        <div class="col-lg-6">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-header bg-white border-0 pt-4 px-4 pb-2">
+              <h5 class="fw-bold mb-0"><i class="fa-solid fa-bolt text-warning me-2"></i>Daily Energy Balance (kWh/day)</h5>
+              <span class="text-muted small">Estimated solar generation vs building electrical demand</span>
+            </div>
+            <div class="card-body p-4 d-flex justify-content-center align-items-center">
+              <div style="position: relative; height: 320px; width: 100%;">
+                <canvas id="energyBalanceChart"></canvas>
+              </div>
+            </div>
+            <div class="card-footer bg-light border-0 py-3 px-4 rounded-bottom-4 small text-muted">
+              <strong>Formula:</strong> 1.75 kWh/panel/day generation vs. 35 kWh/building/day typical consumption.
+            </div>
+          </div>
+        </div>
+
+        <!-- Doughnut Chart: Urban Land-Use Allocation -->
+        <div class="col-lg-6">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-header bg-white border-0 pt-4 px-4 pb-2">
+              <h5 class="fw-bold mb-0"><i class="fa-solid fa-layer-group text-primary me-2"></i>Urban Surface Area Allocation (m²)</h5>
+              <span class="text-muted small">Distribution of built structures, transit corridors, and green canopy</span>
+            </div>
+            <div class="card-body p-4 d-flex justify-content-center align-items-center">
+              <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="landUseDoughnutChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Air Quality / Emissions Breakdown -->
+        <div class="col-lg-6">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-header bg-white border-0 pt-4 px-4 pb-2">
+              <h5 class="fw-bold mb-0"><i class="fa-solid fa-smog text-info me-2"></i>Emissions Sources vs. Ecological Sinks</h5>
+              <span class="text-muted small">Carbon and particulate generation offset balance</span>
+            </div>
+            <div class="card-body p-4">
+              <div class="mb-3">
+                <div class="d-flex justify-content-between small fw-semibold mb-1">
+                  <span>Gross Urban Emissions (Vehicles + HVAC)</span>
+                  <span class="text-danger" id="analyticsGrossEmissions">32.5 pts</span>
+                </div>
+                <div class="progress" style="height: 12px;">
+                  <div class="progress-bar bg-danger" id="barGrossEmissions" style="width: 65%;"></div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="d-flex justify-content-between small fw-semibold mb-1">
+                  <span>Urban Tree Carbon Sinks (Absorption)</span>
+                  <span class="text-success" id="analyticsTreeOffsets">24.7 pts</span>
+                </div>
+                <div class="progress" style="height: 12px;">
+                  <div class="progress-bar bg-success" id="barTreeOffsets" style="width: 50%;"></div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="d-flex justify-content-between small fw-semibold mb-1">
+                  <span>Solar Clean Energy Grid Displacement</span>
+                  <span class="text-warning" id="analyticsSolarOffsets">14.0 pts</span>
+                </div>
+                <div class="progress" style="height: 12px;">
+                  <div class="progress-bar bg-warning" id="barSolarOffsets" style="width: 35%;"></div>
+                </div>
+              </div>
+
+              <div class="p-3 bg-light rounded-3 mt-4">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="fw-bold mb-0">Net Air Quality Result</h6>
+                    <span class="small text-muted" id="analyticsAirSummary">Air is clean with substantial forest buffers.</span>
+                  </div>
+                  <span class="badge bg-success fs-6 px-3 py-2 rounded-pill" id="analyticsNetAqiBadge">AQI Index: 22</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SECTION 5: SAVED CITIES (CRUD MANAGEMENT) ================= -->
+    <section id="savedCities" class="mb-5">
+      <div class="section-header d-flex flex-wrap justify-content-between align-items-end mb-4">
+        <div>
+          <span class="badge bg-success bg-opacity-10 text-success fw-bold px-3 py-1 rounded-pill mb-2">Persistent Database</span>
+          <h2 class="fw-bold mb-1">Saved Smart Cities</h2>
+          <p class="text-muted mb-0">Persistently stored in MongoDB Atlas (Database: <code>ecosim</code>, Collection: <code>cities</code>).</p>
+        </div>
+        <div class="d-flex align-items-center gap-2 mt-3 mt-md-0">
+          <!-- Search Input -->
+          <div class="input-group input-group-sm" style="max-width: 250px;">
+            <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+            <input type="text" id="savedCitySearch" class="form-control border-start-0" placeholder="Search cities...">
+          </div>
+          <!-- Refresh Button -->
+          <button class="btn btn-outline-success btn-sm rounded-pill fw-semibold" id="btnRefreshSavedCities">
+            <i class="fa-solid fa-rotate me-1"></i> Refresh
+          </button>
+        </div>
+      </div>
+
+      <!-- Cities Container -->
+      <div id="savedCitiesContainer">
+        <!-- Rendered dynamically via app.js -->
+        <div class="text-center py-5 text-muted">
+          <div class="spinner-border text-success mb-3" role="status"></div>
+          <p class="mb-0">Loading saved cities from MongoDB Atlas...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SECTION 6: COMPARE CITIES ================= -->
+    <section id="compare" class="mb-5">
+      <div class="section-header mb-4">
+        <span class="badge bg-primary bg-opacity-10 text-primary fw-bold px-3 py-1 rounded-pill mb-2">Side-by-Side Benchmark</span>
+        <h2 class="fw-bold mb-1">Compare Smart Cities</h2>
+        <p class="text-muted mb-0">Select two saved configurations from MongoDB to contrast their ecological metrics, energy resilience, and urban traffic footprint.</p>
+      </div>
+
+      <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4">
+          <div class="row g-3 align-items-center">
+            <div class="col-md-5">
+              <label for="selectCompareCity1" class="form-label fw-bold small text-muted">Select Primary City (City A)</label>
+              <select class="form-select form-select-lg rounded-3" id="selectCompareCity1">
+                <option value="">-- Choose City A --</option>
+              </select>
+            </div>
+            <div class="col-md-2 text-center">
+              <div class="fs-4 text-muted fw-bold d-none d-md-block">VS</div>
+            </div>
+            <div class="col-md-5">
+              <label for="selectCompareCity2" class="form-label fw-bold small text-muted">Select Target City (City B)</label>
+              <select class="form-select form-select-lg rounded-3" id="selectCompareCity2">
+                <option value="">-- Choose City B --</option>
+              </select>
+            </div>
+          </div>
+          <div class="text-center mt-3">
+            <button class="btn btn-primary rounded-pill px-4 fw-bold" id="btnRunComparison">
+              <i class="fa-solid fa-code-compare me-1"></i> Run Side-by-Side Comparison
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison Output Container -->
+      <div id="compareResultsContainer" style="display: none;">
+        <!-- Filled dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- ================= SECTION 7: ABOUT & METHODOLOGY ================= -->
+    <section id="methodology" class="mb-5">
+      <div class="section-header mb-4">
+        <span class="badge bg-secondary bg-opacity-10 text-secondary fw-bold px-3 py-1 rounded-pill mb-2">College Project Documentation</span>
+        <h2 class="fw-bold mb-1">About EcoSim & Technical Methodology</h2>
+        <p class="text-muted mb-0">Comprehensive academic report content, architecture, UML diagrams, and formula specifications.</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- 3.1 & 3.2 Methodology & Architecture -->
+        <div class="col-lg-6">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body p-4">
+              <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-diagram-project me-2"></i>3.1 Proposed Methodology</h5>
+              <p class="small text-muted">
+                EcoSim implements an iterative, feedback-driven smart city modeling framework. Urban designers adjust fundamental zoning parameters (transit density, built mass, green canopy, and distributed solar generation). The deterministic mathematical model computes immediate environmental impacts, which are visualized through 60-FPS canvas rendering and stored in MongoDB Atlas for persistent longitudinal analysis.
+              </p>
+
+              <h5 class="fw-bold mt-4 mb-3 text-success"><i class="fa-solid fa-layer-group me-2"></i>3.2 Three-Tier System Architecture</h5>
+              <div class="architecture-flow p-3 bg-light rounded-3 small">
+                <div class="mb-2">
+                  <span class="badge bg-primary">Presentation Tier</span>
+                  <strong>Client Browser:</strong> HTML5, CSS3, Bootstrap 5, Chart.js, HTML5 Canvas 2D Engine.
+                </div>
+                <div class="mb-2">
+                  <span class="badge bg-success">Application Tier</span>
+                  <strong>Node.js / Express Server:</strong> RESTful API routing, input sanitation, validation middleware, and deterministic simulation engine.
+                </div>
+                <div>
+                  <span class="badge bg-dark">Data Tier</span>
+                  <strong>MongoDB Atlas:</strong> Managed cloud NoSQL database, Mongoose ODM schemas, structured BSON persistence.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3.3 & 3.4 UML Use Case & Database Design -->
+        <div class="col-lg-6">
+          <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body p-4">
+              <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-code me-2"></i>3.5 Database Design (MongoDB Collection)</h5>
+              <div class="bg-dark text-light p-3 rounded-3 small font-monospace">
+<span class="text-info">// Database:</span> ecosim
+<span class="text-info">// Collection:</span> cities
+{
+  "_id": ObjectId("67..."),
+  "cityName": String (required, 2-60 chars),
+  "description": String (optional, max 300),
+  "vehicles": Number (integer >= 0),
+  "buildings": Number (integer >= 0),
+  "trees": Number (integer >= 0),
+  "solarPanels": Number (integer >= 0),
+  "greenSpaceSqKm": Number (default: 4.5),
+  "publicTransitRatio": Number (default: 30),
+  "simulationMetrics": {
+    "trafficCongestion": Number (0-100%),
+    "pollutionIndex": Number (0-100),
+    "solarEnergyOutputKWh": Number,
+    "greeneryPercentage": Number (0-100%),
+    "sustainabilityScore": Number (0-100),
+    "sustainabilityGrade": String
+  },
+  "createdAt": ISODate(),
+  "updatedAt": ISODate()
+}
+              </div>
+
+              <h5 class="fw-bold mt-4 mb-2 text-success"><i class="fa-solid fa-calculator me-2"></i>Simulation Formulas</h5>
+              <ul class="small text-muted ps-3 mb-0">
+                <li><strong>Traffic:</strong> $Congestion\% = \min(100, \frac{V_{effective}}{V_{effective} + C_{road}} \times 100)$</li>
+                <li><strong>Solar:</strong> $P_{daily} = N_{panels} \times 1.75\text{ kWh}$; Coverage against $N_{bld} \times 35\text{ kWh}$.</li>
+                <li><strong>Pollution:</strong> $Net = \max(0, (0.085 V + 0.05 B) - (0.038 T + 0.035 S))$.</li>
+                <li><strong>Greenery:</strong> $Canopy\% = \frac{\text{Tree Area} + \text{Parks}}{\text{Total Urban Area}} \times 100$.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-dark text-white py-5 border-top border-light border-opacity-10">
+    <div class="container-fluid px-lg-5">
+      <div class="row g-4 align-items-center">
+        <div class="col-md-6">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <span class="fs-4">🌱</span>
+            <span class="fw-bold fs-5 brand-title">EcoSim</span>
+            <span class="badge bg-success-light text-dark fw-bold rounded-pill">v1.0.0</span>
+          </div>
+          <p class="text-white-50 small mb-0">
+            A Miniature Smart City Simulator and Analytics Platform for Web Technology coursework. Powered by Node.js, Express, MongoDB Atlas, and Chart.js.
+          </p>
+        </div>
+        <div class="col-md-6 text-md-end text-white-50 small">
+          <div>Persistent Database: <strong class="text-white">MongoDB Atlas (ecosim)</strong></div>
+          <div>Development Environment: <strong class="text-white">Google Antigravity</strong></div>
+          <div class="mt-2 text-white-50">Designed for college presentation, academic evaluation, and public deployment.</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= MODAL: MONGODB ATLAS SETUP INSTRUCTIONS ================= -->
+  <div class="modal fade" id="dbConfigModal" tabindex="-1" aria-labelledby="dbConfigModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title fw-bold" id="dbConfigModalLabel">
+            <i class="fa-solid fa-database me-2"></i> MongoDB Atlas Connection Guide
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="alert alert-info border-info small mb-4">
+            <i class="fa-solid fa-shield-halved me-1"></i>
+            <strong>Security Notice:</strong> Database credentials should <strong>never</strong> be entered into chat or frontend forms. Enter them directly into your local <code>.env</code> file.
+          </div>
+
+          <h6 class="fw-bold text-dark mb-2">Step 1: Get Connection String from MongoDB Atlas</h6>
+          <ol class="small text-muted mb-4">
+            <li>Log in to <a href="https://cloud.mongodb.com" target="_blank" class="fw-bold text-success">MongoDB Atlas</a>.</li>
+            <li>In the left sidebar, click <strong>Database</strong> or <strong>Clusters</strong>.</li>
+            <li>Click the <strong>Connect</strong> button next to your cluster.</li>
+            <li>Choose <strong>Drivers</strong> (Select Node.js).</li>
+            <li>Copy the provided connection string.</li>
+          </ol>
+
+          <h6 class="fw-bold text-dark mb-2">Step 2: Paste in EcoSim/.env</h6>
+          <p class="small text-muted mb-2">
+            Open the file: <code>EcoSim/.env</code> in your editor. Replace line 1 with your connection string:
+          </p>
+          <div class="bg-dark text-light p-3 rounded-3 small font-monospace mb-3 position-relative">
+            <code>MONGODB_URI=mongodb+srv://<span class="text-warning">&lt;username&gt;</span>:<span class="text-warning">&lt;password&gt;</span>@<span class="text-info">&lt;cluster&gt;</span>.mongodb.net/ecosim</code>
+          </div>
+
+          <div class="alert alert-warning small mb-3">
+            <i class="fa-solid fa-triangle-exclamation me-1"></i>
+            <strong>Important Tips:</strong>
+            <ul class="mb-0 ps-3 mt-1">
+              <li>Replace <code>&lt;username&gt;</code> and <code>&lt;password&gt;</code> with your actual Atlas database user (remove the angle brackets <code>&lt; &gt;</code>).</li>
+              <li>Make sure the database name is <code>ecosim</code>.</li>
+              <li>If your password contains special characters like <code>@</code>, <code>:</code>, or <code>/</code>, URL-encode them (e.g. <code>@</code> becomes <code>%40</code>).</li>
+              <li>In Atlas > <strong>Network Access</strong>, ensure your IP address is whitelisted (or <code>0.0.0.0/0</code> for access from anywhere).</li>
+            </ul>
+          </div>
+
+          <h6 class="fw-bold text-dark mb-2">Step 3: Save and Verify</h6>
+          <p class="small text-muted mb-0">
+            Press <strong>Ctrl+S</strong> to save <code>.env</code>. Then click the button below to test the connection immediately!
+          </p>
+        </div>
+        <div class="modal-footer bg-light border-0">
+          <button type="button" class="btn btn-secondary rounded-pill btn-sm" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-success rounded-pill btn-sm fw-bold" id="btnModalTestDb">
+            <i class="fa-solid fa-rotate me-1"></i> Test Connection Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: DELETE CONFIRMATION ================= -->
+  <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title fw-bold"><i class="fa-solid fa-trash-can me-2"></i>Confirm City Deletion</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4 text-center">
+          <p class="mb-2">Are you sure you want to permanently delete this city configuration from MongoDB?</p>
+          <h5 class="fw-bold text-danger my-3" id="deleteCityNameTarget">City Name</h5>
+          <p class="text-muted small mb-0">This operation cannot be undone. The document will be removed from the Atlas cluster.</p>
+        </div>
+        <div class="modal-footer bg-light border-0 justify-content-center">
+          <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger rounded-pill px-4 fw-bold" id="btnConfirmDeleteCity">
+            <i class="fa-solid fa-trash-can me-1"></i> Permanently Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOAST CONTAINER FOR NOTIFICATIONS ================= -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+    <div id="appToast" class="toast align-items-center text-white border-0 shadow-lg rounded-3" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body d-flex align-items-center gap-2">
+          <i id="toastIcon" class="fa-solid fa-circle-check fs-5"></i>
+          <span id="toastMessage">Action completed successfully.</span>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Chart.js 4.4 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+  <!-- Visualizer Engine & App Logic -->
+  <script src="cityVisualizer.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
