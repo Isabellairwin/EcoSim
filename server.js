@@ -45,16 +45,19 @@ app.use((err, req, res, next) => {
 });
 
 // Start Server and initialize MongoDB connection
-const server = app.listen(PORT, async () => {
-  console.log('='.repeat(65));
-  console.log(` 🌱 EcoSim — Miniature Smart City Simulator`);
-  console.log(` 🚀 Server listening on: http://localhost:${PORT}`);
-  console.log(` 🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log('='.repeat(65));
+let server = null;
+if (require.main === module) {
+  server = app.listen(PORT, async () => {
+    console.log('='.repeat(65));
+    console.log(` 🌱 EcoSim — Miniature Smart City Simulator`);
+    console.log(` 🚀 Server listening on: http://localhost:${PORT}`);
+    console.log(` 🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log('='.repeat(65));
 
-  // Connect to MongoDB Atlas (or notify if URI is pending)
-  await connectDB();
-});
+    // Connect to MongoDB Atlas (or notify if URI is pending)
+    await connectDB();
+  });
+}
 
 module.exports = { app, server };
 

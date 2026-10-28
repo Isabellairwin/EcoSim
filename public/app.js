@@ -611,10 +611,22 @@ async function checkDatabaseHealth() {
         dot.className = 'status-dot status-dot-warning';
       }
       if (text) {
-        text.textContent = 'Atlas: Awaiting .env URI';
+        if (data.database && data.database.category === 'NETWORK_ACCESS_IP_ALLOWLIST') {
+          text.textContent = 'Atlas: IP Not Whitelisted';
+        } else if (data.database && data.database.category === 'AUTHENTICATION_FAILURE') {
+          text.textContent = 'Atlas: Auth Failed';
+        } else {
+          text.textContent = 'Atlas: Pending Connection';
+        }
       }
       if (alertBanner) {
         alertBanner.classList.remove('d-none');
+        const bannerHeading = alertBanner.querySelector('.alert-heading');
+        const bannerP = alertBanner.querySelector('p');
+        if (data.database && data.database.category === 'NETWORK_ACCESS_IP_ALLOWLIST') {
+          if (bannerHeading) bannerHeading.textContent = 'MongoDB Atlas: IP Address Not Whitelisted';
+          if (bannerP) bannerP.innerHTML = 'Atlas rejected the connection because your current public IP is not in your cluster allowlist. Go to <strong>MongoDB Atlas &gt; Security &gt; Network Access &gt; Add IP Address &gt; Add Current IP Address</strong>.';
+        }
       }
     }
   } catch (err) {

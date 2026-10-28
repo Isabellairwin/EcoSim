@@ -1,17 +1,33 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const http = require('node:http');
-const { app, server } = require('../server');
+const { app } = require('../server');
 
-// Helper to make local HTTP requests against running server
+let testServer;
+let testPort;
+
+test.before(async () => {
+  await new Promise((resolve, reject) => {
+    testServer = app.listen(0, '127.0.0.1', () => {
+      testPort = testServer.address().port;
+      resolve();
+    });
+    testServer.on('error', reject);
+  });
+});
+
+test.after(async () => {
+  if (testServer) {
+    await new Promise(resolve => testServer.close(resolve));
+  }
+});
+
+// Helper to make local HTTP requests against running test server
 function request(method, path, body = null) {
   return new Promise((resolve, reject) => {
-    const address = server.address();
-    const port = address.port;
-
     const options = {
       hostname: '127.0.0.1',
-      port,
+      port: testPort,
       path,
       method,
       headers: {
@@ -113,9 +129,3 @@ test('API 404 Route Handling - Non-existent Endpoint', async () => {
   assert.equal(res.status, 404);
   assert.equal(res.body.success, false);
 });
-
-// Teardown server after tests
-test.after(() => {
-  server.close();
-});
-
